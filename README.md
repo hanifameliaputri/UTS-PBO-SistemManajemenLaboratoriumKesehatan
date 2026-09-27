@@ -167,7 +167,7 @@ Berisi class yang merepresentasikan data dalam program, yaitu pasien, petugas, a
 
 ---
 
-## 5. Penerapan Elemen Wajib UTS
+## 5.Penerapan Inheritance, Polymorphism, Condition, dan Looping
 
 ### a. Inheritance (2 tipe)
 
