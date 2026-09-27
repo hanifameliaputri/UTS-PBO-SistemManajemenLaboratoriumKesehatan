@@ -1,16 +1,25 @@
-# Minpro-2-PBO-SistemManajemenLaboratoriumKesehatan
+# UTS-PBO-SistemManajemenLaboratoriumKesehatan
 
 **Nama:** Hanif Amelia Putri  
+
 **Kelas:** B  
+
 **NIM:** 2509116075  
 
 ## 1. Deskripsi Program
 
-Sistem Manajemen Laboratorium Kesehatan adalah program berbasis Java yang digunakan untuk mengelola data pasien, petugas laboratorium, jenis pemeriksaan, dan hasil pemeriksaan.
+Sistem Manajemen Laboratorium Kesehatan adalah program berbasis Java (console/command line) yang digunakan untuk mengelola data operasional sebuah laboratorium kesehatan, meliputi data **pasien**, **petugas** (Dokter dan Analis), **jenis pemeriksaan**, dan **hasil pemeriksaan**.
 
-Program ini merupakan pengembangan dari Mini Project 1 dengan menerapkan beberapa konsep Pemrograman Berorientasi Objek (PBO), seperti **encapsulation, inheritance, overriding, polymorphism, constructor, access modifier, getter dan setter**, serta validasi input.
+Program ini dibuat untuk memenuhi tugas UTS Pemrograman Berorientasi Objek (PBO), dengan menerapkan konsep-konsep dasar OOP secara nyata dalam sebuah studi kasus, yaitu:
 
-Program juga menggunakan `ArrayList` untuk menyimpan data selama program berjalan dan menyediakan dummy data agar pengguna dapat langsung melihat data ketika program dijalankan.
+- **Inheritance** (minimal 2 tipe subclass)
+- **Polymorphism** (Method Overriding dan Overloading)
+- **Condition** (if-else)
+- **Looping**
+
+Selain empat elemen wajib tersebut, program juga menerapkan `encapsulation`, `constructor`, `access modifier`, `ArrayList`, validasi input, serta struktur package (MVC-like: model, view, controller).
+
+Kegunaan program: memungkinkan petugas administrasi lab mencatat pendaftaran pemeriksaan pasien (siapa diperiksa apa oleh siapa), lalu mencatat dan menelusuri hasil pemeriksaannya, tanpa perlu sistem manual berbasis kertas.
 
 ---
 
@@ -158,155 +167,123 @@ Berisi class yang merepresentasikan data dalam program, yaitu pasien, petugas, a
 
 ---
 
-## 5. Penerapan Encapsulation
+## 5. Penerapan Elemen Wajib UTS
 
-Encapsulation diterapkan dengan membuat atribut pada class menjadi `private`.
+### a. Inheritance (2 tipe)
 
-Contohnya pada class `Pasien`:
-
-```java
-private String id;
-private String nama;
-private int umur;
-private String jenisKelamin;
-private String keluhan;
-```
-
-Atribut tersebut tidak dapat diakses secara langsung dari luar class. Untuk mengakses atau mengubah nilainya digunakan getter dan setter.
-
-Contohnya:
-
-```java
-public String getNama() {
-    return nama;
-}
-
-public void setNama(String nama) {
-    if (nama != null && !nama.trim().isEmpty()) {
-        this.nama = nama;
-    }
-}
-```
-
-Selain sebagai akses data, setter juga digunakan untuk melakukan validasi.
-
-Contohnya umur tidak boleh bernilai 0 atau negatif:
-
-```java
-public void setUmur(int umur) {
-    if (umur > 0) {
-        this.umur = umur;
-    }
-}
-```
-
-Dengan demikian, data pada object tetap dikontrol melalui method yang telah disediakan.
-
----
-
-## 6. Penerapan Inheritance
-
-Inheritance diterapkan pada class `Petugas`, `Analis`, dan `Dokter`.
-
-`Petugas` digunakan sebagai superclass, sedangkan `Analis` dan `Dokter` menjadi subclass.
-
-Strukturnya:
+Class `Petugas` berperan sebagai **superclass**, dengan dua **tipe subclass**: `Analis` dan `Dokter`.
 
 ```text
           Petugas
           /     \
-         /       \
       Analis    Dokter
 ```
 
-Class `Petugas` memiliki atribut umum:
-
 ```java
-private String id;
-private String nama;
-private int umur;
-private String jenisKelamin;
+public class Petugas {
+    private String id;
+    private String nama;
+    private int umur;
+    private String jenisKelamin;
+    // ...
+}
+
+public class Analis extends Petugas {
+    private String spesialisasiBidang;
+    // ...
+}
+
+public class Dokter extends Petugas {
+    private String nomorSTR;
+    // ...
+}
 ```
 
-Kemudian class `Analis` mewarisi class `Petugas` menggunakan:
+`Analis` dan `Dokter` mewarisi seluruh atribut dan method umum dari `Petugas` (id, nama, umur, jenis kelamin beserta getter/setter-nya), lalu masing-masing menambahkan atribut khusus miliknya sendiri.
+
+### b. Polymorphism — Overriding
+
+Method `tampilkanInfo()` didefinisikan di `Petugas`, lalu **di-override** oleh `Analis` dan `Dokter` agar menampilkan info tambahan sesuai perannya:
 
 ```java
-public class Analis extends Petugas
+// Petugas
+public String tampilkanInfo() {
+    return "ID: " + id + " | Nama: " + nama;
+}
+
+// Analis (override)
+@Override
+public String tampilkanInfo() {
+    return super.tampilkanInfo() + " | Peran: Analis | Spesialisasi/Bidang: " + spesialisasiBidang;
+}
+
+// Dokter (override)
+@Override
+public String tampilkanInfo() {
+    return super.tampilkanInfo() + " | Peran: Dokter | No. STR: " + nomorSTR;
+}
 ```
 
-Sedangkan class `Dokter` menggunakan:
+Karena `Analis` dan `Dokter` disimpan bersama dalam satu `ArrayList<Petugas>`, saat program melakukan perulangan dan memanggil `p.tampilkanInfo()`, Java akan otomatis menjalankan versi method sesuai objek aslinya (Analis atau Dokter) walaupun tipe referensinya `Petugas` — inilah *dynamic method dispatch*, inti dari polymorphism lewat overriding.
 
-```java
-public class Dokter extends Petugas
-```
+### c. Polymorphism — Overloading
 
-Selain mewarisi atribut dan method dari `Petugas`, masing-masing subclass memiliki atribut khusus.
-
-Pada `Analis` terdapat:
-
-```java
-private String spesialisasiBidang;
-```
-
-Sedangkan pada `Dokter` terdapat:
-
-```java
-private String nomorSTR;
-```
-
----
-
-## 7. Penerapan Overriding
-
-Overriding diterapkan pada method `tampilkanInfo()` yang terdapat pada class `Petugas`.
-
-Pada class `Petugas` terdapat:
+Selain overriding, program juga menerapkan **overloading** (nama method sama, parameter berbeda):
 
 ```java
 public String tampilkanInfo() {
     return "ID: " + id + " | Nama: " + nama;
 }
-```
 
-Kemudian method tersebut dioverride oleh class `Analis`:
-
-```java
-@Override
-public String tampilkanInfo() {
-    return super.tampilkanInfo()
-            + " | Peran: Analis | Spesialisasi/Bidang: "
-            + spesialisasiBidang;
+public String tampilkanInfo(boolean detail) {
+    if (!detail) {
+        return tampilkanInfo();
+    }
+    return "ID: " + id + " | Nama: " + nama
+            + " | Umur: " + umur + " | Jenis Kelamin: " + jenisKelamin;
 }
 ```
 
-Method tersebut juga dioverride oleh class `Dokter`:
+Contoh lain ada di `LaboratoriumController`, method `bacaInt()` di-*overload* menjadi dua versi — tanpa batas rentang (dipakai untuk pilihan menu) dan dengan batas rentang minimal-maksimal (dipakai misalnya oleh `bacaUmur()`):
 
 ```java
-@Override
-public String tampilkanInfo() {
-    return super.tampilkanInfo()
-            + " | Peran: Dokter | No. STR: "
-            + nomorSTR;
+private int bacaInt(Scanner scanner) {
+    return bacaInt(scanner, Integer.MIN_VALUE, Integer.MAX_VALUE);
+}
+
+private int bacaInt(Scanner scanner, int min, int max) {
+    // ... validasi angka dalam rentang min-max
 }
 ```
 
-Dengan overriding, masing-masing subclass dapat memberikan tampilan informasi yang berbeda sesuai dengan jenis petugasnya.
+### d. Condition (if-else)
 
----
-
-## 8. Penerapan Polymorphism
-
-Polymorphism diterapkan ketika object `Analis` dan `Dokter` disimpan dalam `ArrayList<Petugas>`.
-
-Contohnya:
+Percabangan `if-else` dipakai secara luas untuk validasi input, misalnya pada setter `Petugas`:
 
 ```java
-private final ArrayList<Petugas> daftarPetugas;
+public void setNama(String nama) {
+    if (nama != null && !nama.trim().isEmpty()) {
+        this.nama = nama;
+    } else {
+        System.out.println(">> ERROR: Nama tidak boleh kosong!");
+    }
+}
+
+public void setUmur(int umur) {
+    if (umur > 0) {
+        this.umur = umur;
+    } else {
+        System.out.println(">> ERROR: Umur harus lebih dari 0!");
+    }
+}
 ```
 
-Karena `Analis` dan `Dokter` merupakan turunan dari `Petugas`, keduanya dapat dimasukkan ke dalam `ArrayList<Petugas>`.
+`if-else` juga dipakai untuk mengecek hasil pencarian data (null-check) sebelum data ditampilkan atau diproses lebih lanjut, misalnya saat mencari pasien/pemeriksaan/petugas berdasarkan ID.
 
-Ketika data petugas ditampilkan:
+### e. Looping
+
+- **`while`** — dipakai supaya menu utama dan setiap sub-menu terus berjalan berulang sampai pengguna memilih opsi keluar/kembali.
+- **`for`** — dipakai untuk menelusuri isi `ArrayList` saat menampilkan seluruh data (misalnya `tampilkanSemuaPasien()`, `tampilkanSemuaPetugas()`, `tampilkanSemuaPemeriksaan()`).
 
 ```java
 for (Petugas p : daftarPetugas) {
@@ -314,41 +291,6 @@ for (Petugas p : daftarPetugas) {
 }
 ```
 
-Program akan menjalankan method `tampilkanInfo()` sesuai dengan object sebenarnya.
-
-Jika object merupakan `Analis`, informasi yang ditampilkan akan menggunakan versi `Analis`.
-
-Jika object merupakan `Dokter`, informasi yang ditampilkan akan menggunakan versi `Dokter`.
-
-Hal tersebut menunjukkan penerapan polymorphism dalam program.
-
----
-
-## 9. Validasi Input
-
-Program menerapkan validasi input agar data yang dimasukkan pengguna sesuai dengan ketentuan.
-
-Beberapa validasi yang diterapkan antara lain:
-
-### Validasi Nama
-
-Nama tidak boleh kosong:
-
-```java
-if (nama != null && !nama.trim().isEmpty()) {
-    this.nama = nama;
-}
-```
-
-### Validasi Umur
-
-Umur harus lebih dari 0:
-
-```java
-if (umur > 0) {
-    this.umur = umur;
-}
-```
 
 ### Validasi Biaya
 
@@ -368,7 +310,7 @@ Validasi ini membantu mengurangi kesalahan ketika pengguna memasukkan data ke da
 
 ---
 
-## 10. Dummy Data
+## 6. Dummy Data
 
 Program menyediakan dummy data yang dimasukkan ketika program pertama kali dijalankan.
 
@@ -392,7 +334,7 @@ Sedangkan data pasien, pemeriksaan, dan hasil pemeriksaan masing-masing disimpan
 
 ---
 
-## 11. Konsep PBO yang Diterapkan
+## 7. Konsep PBO yang Diterapkan
 
 Program ini menerapkan beberapa konsep Pemrograman Berorientasi Objek, yaitu:
 
@@ -411,7 +353,179 @@ Program ini menerapkan beberapa konsep Pemrograman Berorientasi Objek, yaitu:
 
 ---
 
-## 12. Kesimpulan
+## 8. Hasil Output Program 
+
+Berikut tampilan program saat dijalankan, berurutan dari menu utama sampai keluar.
+
+### Menu Utama
+
+Tampilan pertama saat program dijalankan.
+
+<img height="200" alt="image" src="https://github.com/user-attachments/assets/e08d72bc-32c8-4a46-bfd7-ce88df167df1" />
+
+
+### Menu 1 - Pendaftaran Pemeriksaan
+
+Pendaftaran dengan **pasien baru**: pengguna mengisi data pasien, lalu memilih pemeriksaan dan petugas.
+
+<img height="500" alt="image" src="https://github.com/user-attachments/assets/d0c6835f-c0f3-4ae4-9a47-479a10919cc6" />
+
+Penjelasan alur pada gambar di atas:
+
+1. Pengguna memilih menu **1. Pendaftaran Pemeriksaan**, lalu memilih **1. Pasien Baru**.
+2. Program meminta data pasien: nama, umur, jenis kelamin, dan keluhan. Setiap input divalidasi, misalnya jenis kelamin hanya menerima `Laki-laki` atau `Perempuan` (huruf besar/kecil tidak dibedakan).
+3. Setelah data valid, pasien disimpan dan mendapat **ID otomatis** (`P2`, karena `P1` sudah dipakai dummy data).
+4. Program menampilkan daftar pemeriksaan beserta biayanya, lalu pengguna memasukkan ID pemeriksaan (`PM1`).
+5. Program menampilkan daftar petugas, lalu pengguna memasukkan ID petugas (`PT2`). Tampilan daftar ini memperlihatkan hasil **overriding**: `Analis` menampilkan spesialisasi, sedangkan `Dokter` menampilkan nomor STR.
+
+Tampilan **konfirmasi pendaftaran** setelah semua data dipilih.
+
+<img height="215" alt="image" src="https://github.com/user-attachments/assets/6221e7de-250e-428c-8675-93c7998378e2" />
+
+
+Pendaftaran dengan **pasien yang sudah terdaftar** dan tampilan konfirmasi pendaftaran.
+
+<img height="600" alt="image" src="https://github.com/user-attachments/assets/f9554086-2e57-4a52-80f7-2771cd47b236" />
+
+
+Penjelasan alur pada gambar di atas:
+
+1. Pengguna memilih **2. Pasien Sudah Terdaftar**, lalu program menampilkan semua pasien (`P1` dan `P2`). Pasien `P2` adalah pasien yang sebelumnya didaftarkan sebagai pasien baru, sehingga terlihat bahwa data tersimpan di `ArrayList`.
+2. Pengguna memasukkan ID pasien (`p1`). Pencarian tidak membedakan huruf besar dan kecil (`equalsIgnoreCase`), sehingga `p1` tetap ditemukan sebagai `P1`.
+3. Pengguna memilih pemeriksaan (`PM1`) dan petugas (`PT1`). Daftar petugas menampilkan hasil **overriding**: `Analis` menampilkan spesialisasi, sedangkan `Dokter` menampilkan nomor STR.
+4. Program menampilkan **konfirmasi pendaftaran** berisi ID dan nama pasien, jenis pemeriksaan, biaya, petugas, serta status `Terdaftar`.
+5. Data pendaftaran disimpan pada `pasienTerdaftar`, `pemeriksaanTerdaftar`, dan `petugasTerdaftar` untuk dipakai pada menu **Input Hasil Pemeriksaan**.
+
+
+
+### Menu 2 - Kelola Pasien
+
+**Menu 2**
+
+<img height="205" alt="image" src="https://github.com/user-attachments/assets/8bf91a83-2c9f-47aa-8841-f9337e5d3e0c" />
+
+**Tambah pasien.**
+
+<img height="200" alt="image" src="https://github.com/user-attachments/assets/9456b43d-2908-4bd4-9cf2-805b9c8e4f2a" />
+
+
+**Lihat semua pasien.**
+
+<img height="200" alt="image" src="https://github.com/user-attachments/assets/e69c3b35-7371-4439-b58e-ac83c7d6180a" />
+
+
+
+**Cari pasien berdasarkan ID.**
+
+<img height="200" alt="image" src="https://github.com/user-attachments/assets/a63b2cdb-bf74-4d28-b62b-39b92a2b11d3" />
+
+
+**Hapus pasien.**
+
+<img height="300" alt="image" src="https://github.com/user-attachments/assets/8b07226f-a16f-4626-b5b1-056b92ec2431" />
+
+
+### Menu 3 - Kelola Petugas
+
+**Menu Petugas**
+
+<img height="200" alt="image" src="https://github.com/user-attachments/assets/f894cbeb-39ae-4cf6-965c-41068a27e47f" />
+
+
+**Tambah analis.**
+
+<img height="200" alt="image" src="https://github.com/user-attachments/assets/6e467abc-22a5-450a-a7ad-5cd4de95b1d5" />
+
+
+**Tambah dokter.**
+
+<img height="200" alt="image" src="https://github.com/user-attachments/assets/9ef3e20d-ba4c-493a-9c07-bc76a0bc945b" />
+
+
+**Lihat semua petugas.** Pada tampilan ini terlihat hasil **overriding**: `Analis` menampilkan spesialisasi, sedangkan `Dokter` menampilkan nomor STR.
+
+<img height="200" alt="image" src="https://github.com/user-attachments/assets/2541d238-741b-4295-adb2-553c22211133" />
+
+
+### Menu 4 - Kelola Pemeriksaan
+
+**Menu Pemeriksaan**
+
+<img height="300" alt="image" src="https://github.com/user-attachments/assets/1d988ff6-93f9-4cdd-b66e-975602c74b5f" />
+
+
+**Tambah pemeriksaan.**
+
+<img height="300" alt="image" src="https://github.com/user-attachments/assets/a96b2a2e-fc24-435e-bc07-5c3fa097019d" />
+
+
+**Lihat semua pemeriksaan.**
+
+<img height="300" alt="image" src="https://github.com/user-attachments/assets/4df5db88-4ea8-4e59-b67d-69aafd375d37" />
+
+
+**Cari pemeriksaan.**
+
+<img height="300" alt="image" src="https://github.com/user-attachments/assets/eecdf32a-d036-4861-ac4a-fc36a4e3faff" />
+
+
+**Ubah pemeriksaan.**
+
+<img height="400" alt="image" src="https://github.com/user-attachments/assets/62de538f-b1dd-4389-8f37-c4f3fa8423d4" />
+
+**Hapus pemeriksaan.**
+
+<img height="400" alt="image" src="https://github.com/user-attachments/assets/2a21e46a-a9bf-4de2-a2f9-ee1684ea5011" />
+
+### Menu 5 - Kelola Hasil Pemeriksaan
+
+**Menu Hasil Pemerikasaan**
+
+<img height="200" alt="image" src="https://github.com/user-attachments/assets/71dece68-9187-43c3-b493-39cf59267399" />
+
+**Input hasil pemeriksaan.**
+
+<img height="300" alt="image" src="https://github.com/user-attachments/assets/c1702f36-0e91-4faf-899a-e27454e18335" />
+
+
+**Lihat semua hasil.**
+
+<img height="400" alt="image" src="https://github.com/user-attachments/assets/2ec5fbac-5815-4fa6-a40a-1c1406d6c424" />
+
+
+**Lihat riwayat hasil per pasien.**
+
+<img height="400" alt="image" src="https://github.com/user-attachments/assets/cae10999-f5d9-4f28-91bd-71c9ccc1051f" />
+
+
+### Validasi Input
+
+Contoh ketika pengguna memasukkan input yang salah (misalnya huruf pada kolom umur, atau jenis kelamin yang tidak valid). Program meminta input diulang dan tidak berhenti.
+
+**contoh pada umur:**
+
+<img height="200" alt="image" src="https://github.com/user-attachments/assets/2b3287a8-a402-4cb8-81f9-6f301150e1fa" />
+
+**contoh pada jenis kelamin:**
+
+<img height="200" alt="image" src="https://github.com/user-attachments/assets/f0d20258-6276-439c-baf2-865dc61df61d" />
+
+**contoh pada nama:**
+
+<img height="200" alt="image" src="https://github.com/user-attachments/assets/52eea062-1202-49e4-af27-3ba4c36a9144" />
+
+
+
+### Menu 6 - Keluar
+
+**Program menampilkan pesan penutup dan berhenti.**
+
+<img height="200" alt="image" src="https://github.com/user-attachments/assets/4cd9ff28-b650-4b05-82ce-36129abfd574" />
+
+
+---
+
+## 9. Kesimpulan
 
 Program Sistem Manajemen Laboratorium Kesehatan merupakan pengembangan dari Mini Project 1 yang menambahkan penerapan konsep Pemrograman Berorientasi Objek.
 
