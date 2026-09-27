@@ -527,8 +527,6 @@ Contoh ketika pengguna memasukkan input yang salah (misalnya huruf pada kolom um
 
 ## 9. Kesimpulan
 
-Program Sistem Manajemen Laboratorium Kesehatan merupakan pengembangan dari Mini Project 1 yang menambahkan penerapan konsep Pemrograman Berorientasi Objek.
+Program Sistem Manajemen Laboratorium Kesehatan ini dibuat untuk memenuhi tugas UTS Pemrograman Berorientasi Objek, dengan menerapkan inheritance, polymorphism (overriding dan overloading), percabangan if-else, dan perulangan secara nyata.
 
-Program tidak hanya mengelola data pemeriksaan, tetapi juga menghubungkan data pasien, petugas, pemeriksaan, dan hasil pemeriksaan dalam satu alur.
-
-Penerapan encapsulation, inheritance, overriding, polymorphism, validasi input, `ArrayList`, serta struktur MVC membuat program menjadi lebih terstruktur dan sesuai dengan konsep PBO yang dipelajari.
+Program tidak hanya mengelola data pemeriksaan, tetapi juga menghubungkan data pasien, petugas, pemeriksaan, dan hasil pemeriksaan dalam satu alur kerja. Penerapan encapsulation, inheritance, overriding, overloading, validasi input, ArrayList, serta struktur MVC membuat program menjadi lebih terstruktur dan sesuai dengan konsep PBO yang dipelajari.
